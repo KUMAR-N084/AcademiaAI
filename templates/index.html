@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}AcademiaAI · Dashboard{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">🎓 <span>Academia<strong>AI</strong></span></div>
+    <div class="user-chip">👤 {{ username }}</div>
+
+    <nav>
+      <button class="nav-btn active" data-mode="explain">📖 Explain</button>
+      <button class="nav-btn" data-mode="summary">📝 Summary</button>
+      <button class="nav-btn" data-mode="stepbystep">🪜 Step-by-Step</button>
+      <button class="nav-btn" data-mode="flashcards">🎴 Flashcards</button>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+    <button id="historyBtn" class="ghost">🕑 History</button>
+    <button id="themeToggle" class="ghost">🌙 Dark Mode</button>
+    <form method="POST" action="{{ url_for('auth.logout') }}" class="logout-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button type="submit" class="ghost logout">🚪 Logout</button>
+    </form>
+  </aside>
+
+  <main class="main">
+    <header>
+      <h1>Your AI Academic Assistant</h1>
+      <p>Ask questions, visualize topics, and export answers as PDF.</p>
+    </header>
+
+    <section class="ask-box">
+      <textarea id="question" placeholder="Type your question or topic…"></textarea>
+      <div class="actions">
+        <button id="askBtn" class="primary">✨ Ask AI</button>
+        <button id="visualBtn" class="secondary">🧠 Visualize</button>
+        <button id="videoBtn" class="secondary">🎬 Find Video</button>
+        <button id="pdfBtn" class="secondary" disabled>📄 Export PDF</button>
+      </div>
+    </section>
+
+    <section id="loader" class="loader hidden">
+      <div class="spinner"></div><span>Thinking…</span>
+    </section>
+
+    <section id="answer" class="answer hidden"></section>
+    <section id="flashcards" class="flashcards hidden"></section>
+
+    <section id="vizSection" class="viz hidden">
+      <h2>🗺️ Concept Map</h2>
+      <div id="network"></div>
+      <h2>📊 Key Concepts Chart</h2>
+      <img id="chartImg" alt="chart" />
+    </section>
+
+    <section id="videoSection" class="viz hidden">
+      <h2>🎬 Related Video</h2>
+      <iframe id="videoFrame" allowfullscreen></iframe>
+    </section>
+  </main>
+
+  <!-- History Drawer -->
+  <div id="historyDrawer" class="drawer hidden">
+    <div class="drawer-head">
+      <h3>🕑 Your History</h3>
+      <button id="closeDrawer" class="ghost">✖</button>
+    </div>
+    <div id="historyList" class="history-list"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}
